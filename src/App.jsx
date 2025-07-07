@@ -10,7 +10,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import SmartDisplayIcon from "@mui/icons-material/SmartDisplay";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
-import { ChevronLeft, Heart, Send } from "lucide-react";
+import { ChevronLeft, Heart, Send, Phone } from "lucide-react";
 import { Input } from "@mui/material";
 
 function App() {
@@ -27,7 +27,7 @@ Click below and I'll send you the link in just a sec ✨`
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState([]);
-  const [secondMessage, setSecondMessage] = useState("")
+  const [secondMessage, setSecondMessage] = useState("");
 
   const defaultImages = ["./body.png", "./cat.png", "./flower.png"];
   const allImages = [...defaultImages, ...uploadedImages];
@@ -207,6 +207,7 @@ Click below and I'll send you the link in just a sec ✨`
                   </label>
                   <Input
                     placeholder="Write a message"
+                    value={secondMessage}
                     className="w-full h-10 p-2 border border-gray-300 rounded text-sm resize-none"
                     onChange={(e) => setSecondMessage(e.target.value)}
                   />
@@ -239,170 +240,252 @@ Click below and I'll send you the link in just a sec ✨`
           <div className="relative">
             <div className="w-80 h-[650px] bg-black rounded-[3rem] p-2 shadow-2xl">
               <div className="w-full h-full bg-white rounded-[2.5rem] overflow-hidden relative">
-                {/* Top Header */}
-                <div className="absolute top-0 w-full bg-black z-10 rounded-t-[2.5rem]">
-                  <div className="flex justify-center py-1">
-                    <div className="w-12 h-1.5 bg-gray-700 rounded-full" />
-                  </div>
-
-                  <div className="flex items-center justify-between px-4 py-2">
-                    <ChevronLeft className="text-white" size={20} />
-                    <div className="text-center flex-1 -ml-4">
-                      <p className="text-xs text-gray-400 font-medium">
-                        BOTSPACEHQ
-                      </p>
-                      <p className="text-white text-base font-semibold -mt-1">
-                        Posts
-                      </p>
+                {/* Show DM interface when third step is active */}
+                {showThirdStep ? (
+                  <div className="w-full h-full bg-black text-white flex flex-col">
+                    {/* DM Header */}
+                    <div className="flex items-center justify-between p-4 border-b border-gray-800">
+                      <div className="flex items-center gap-3">
+                        <ChevronLeft className="text-white" size={20} />
+                        <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
+                          <span className="text-white text-xs font-bold">B</span>
+                        </div>
+                        <span className="text-white font-medium">botspacehq</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Phone size={20} className="text-white" />
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-white">
+                          <path d="M23 7L16 12L23 17V7Z" fill="currentColor"/>
+                          <rect x="1" y="5" width="15" height="14" rx="2" fill="none" stroke="currentColor" strokeWidth="2"/>
+                        </svg>
+                      </div>
                     </div>
-                    <div className="w-5" />
-                  </div>
 
-                  <div className="flex items-center px-4 py-2 gap-2">
-                    <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
-                      <span className="text-black text-xs font-bold">+</span>
-                    </div>
-                    <p className="text-white text-sm font-medium">botspacehq</p>
-                    <div className="ml-auto text-white text-xl font-bold">
-                      ⋯
-                    </div>
-                  </div>
-                </div>
-
-                {/* Phone Body */}
-                <div className="pt-12 flex flex-col h-full">
-                  {!showComments ? (
-                    // Show full image when no comments
-                    <div className="flex-1 overflow-hidden flex items-center justify-center">
-                      {allImages[selectedImageIndex] && (
-                        <img
-                          src={allImages[selectedImageIndex]}
-                          alt="Selected"
-                          className="w-full h-full object-cover"
-                        />
-                      )}
-                    </div>
-                  ) : (
-                    // Show image with comments overlay
-                    <>
-                      <div className="flex-1 overflow-hidden flex items-center justify-center relative">
-                        {allImages[selectedImageIndex] && (
-                          <img
-                            src={allImages[selectedImageIndex]}
-                            alt="Selected"
-                            className="w-full h-full object-cover"
-                          />
-                        )}
-                        <div className="absolute bottom-0 rounded-t-xl left-0 right-0 bg-black bg-opacity-90 backdrop-blur-sm">
-                          <div className="flex items-center justify-between p-4 border-b border-gray-600">
-                            <div className="h-[1px] bg-white"></div>
-                            <h3 className="text-white font-semibold">
-                              Comments
-                            </h3>
-                            <div className="text-white">
-                              <Send size={16} />
-                            </div>
-                          </div>
-
-                          {/* Comments List */}
-                          <div className="h-70 overflow-y-auto">
-                            {comments.map((comment) => (
-                              <div
-                                key={comment.id}
-                                className="flex items-start gap-3 p-3 border-gray-700"
-                              >
-                                <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
-                                  <span className="text-white text-xs font-bold">
-                                    {comment.username[0].toUpperCase()}
-                                  </span>
-                                </div>
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-white font-medium text-sm">
-                                      {comment.username}
-                                    </span>
-                                    <span className="text-gray-400 text-xs">
-                                      {comment.time}
-                                    </span>
-                                  </div>
-                                  <p className="text-gray-300 text-sm mt-1">
-                                    {comment.text}
-                                  </p>
-                                  <button className="text-gray-400 text-xs mt-1 hover:text-white">
-                                    Reply
-                                  </button>
-                                </div>
-                                <button
-                                  onClick={() => toggleLike(comment.id)}
-                                  className={`p-1 ${
-                                    comment.liked
-                                      ? "text-red-500"
-                                      : "text-gray-400"
-                                  }`}
-                                >
-                                  <Heart
-                                    size={16}
-                                    fill={
-                                      comment.liked ? "currentColor" : "none"
-                                    }
-                                  />
-                                </button>
-                              </div>
-                            ))}
-                          </div>
-                          <div className="flex justify-between items-end p-2">
-                            {[
-                              "❤️",
-                              "🙌",
-                              "🔥",
-                              "👏",
-                              "😢",
-                              "😍",
-                              "😮",
-                              "😂",
-                            ].map((emoji, index) => (
-                              <button
-                                key={index}
-                                className="text-xl hover:scale-110 transition-transform"
-                              >
-                                {emoji}
-                              </button>
-                            ))}
-                          </div>
-                          {/* Add Comment */}
-                          <div className="flex items-center gap-2 p-3">
-                            <div className="w-8 h-8 bg-gray-600/30 rounded-full flex items-center justify-center">
-                              <span className="text-white text-xs font-bold">
-                                +
-                              </span>
-                            </div>
-                            <input
-                              type="text"
-                              value={newComment}
-                              onChange={(e) => setNewComment(e.target.value)}
-                              placeholder="Add a comment for username..."
-                              className="flex-1 bg-transparent text-white w-full text-sm border border-gray-600/40 p-2.5 rounded-2xl placeholder-gray-400 focus:outline-none"
-                            />
-                            <button
-                              onClick={handleAddComment}
-                              className="text-blue-400 p-1 hover:text-blue-300"
-                            ></button>
+                    {/* DM Messages */}
+                    <div className="flex-1 p-4 flex flex-col gap-3">
+                      {/* Bot Message */}
+                      <div className="flex items-start gap-2">
+                        <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center flex-shrink-0">
+                          <span className="text-white text-xs font-bold">B</span>
+                        </div>
+                        <div className="bg-gray-800 rounded-2xl rounded-tl-sm p-3 max-w-[200px]">
+                          <p className="text-white text-sm leading-relaxed whitespace-pre-wrap">
+                            {message}
+                          </p>
+                          <div className="mt-2 bg-gray-700 rounded-xl p-2 text-center">
+                            <span className="text-white text-sm">Send me the link</span>
                           </div>
                         </div>
                       </div>
-                    </>
-                  )}
 
-                  {!showComments && (
-                    <div className="h-[80px] bg-black p-2 w-full flex items-start justify-around text-white">
-                      <HomeOutlinedIcon fontSize="small" />
-                      <SearchIcon fontSize="small" />
-                      <SmartDisplayIcon fontSize="small" />
-                      <ShoppingBagOutlinedIcon fontSize="small" />
-                      <AccountCircleOutlinedIcon fontSize="small" />
+                      {/* User Response */}
+                      <div className="flex justify-end">
+                        <div className="bg-blue-600 rounded-2xl rounded-tr-sm p-3 max-w-[200px]">
+                          <p className="text-white text-sm">Send me the link</p>
+                        </div>
+                      </div>
+
+                      {/* Second Bot Message */}
+                      {secondMessage && (
+                        <div className="flex items-start gap-2">
+                          <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center flex-shrink-0">
+                            <span className="text-white text-xs font-bold">B</span>
+                          </div>
+                          <div className="bg-gray-800 rounded-2xl rounded-tl-sm p-3 max-w-[200px]">
+                            <p className="text-white text-sm leading-relaxed">
+                              {secondMessage}
+                            </p>
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
+
+                    {/* DM Input */}
+                    <div className="p-4 border-t border-gray-800">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                          <span className="text-white text-xs font-bold">📷</span>
+                        </div>
+                        <div className="flex-1 bg-gray-800 rounded-full px-4 py-2 text-gray-400 text-sm">
+                          Message...
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-2xl">🖼️</span>
+                          <span className="text-2xl">🎤</span>
+                          <span className="text-2xl">➕</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {/* Original Instagram Post UI */}
+                    {/* Top Header */}
+                    <div className="absolute top-0 w-full bg-black z-10 rounded-t-[2.5rem]">
+                      <div className="flex justify-center py-1">
+                        <div className="w-12 h-1.5 bg-gray-700 rounded-full" />
+                      </div>
+
+                      <div className="flex items-center justify-between px-4 py-2">
+                        <ChevronLeft className="text-white" size={20} />
+                        <div className="text-center flex-1 -ml-4">
+                          <p className="text-xs text-gray-400 font-medium">
+                            BOTSPACEHQ
+                          </p>
+                          <p className="text-white text-base font-semibold -mt-1">
+                            Posts
+                          </p>
+                        </div>
+                        <div className="w-5" />
+                      </div>
+
+                      <div className="flex items-center px-4 py-2 gap-2">
+                        <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
+                          <span className="text-black text-xs font-bold">+</span>
+                        </div>
+                        <p className="text-white text-sm font-medium">botspacehq</p>
+                        <div className="ml-auto text-white text-xl font-bold">
+                          ⋯
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Phone Body */}
+                    <div className="pt-12 flex flex-col h-full">
+                      {!showComments ? (
+                        // Show full image when no comments
+                        <div className="flex-1 overflow-hidden flex items-center justify-center">
+                          {allImages[selectedImageIndex] && (
+                            <img
+                              src={allImages[selectedImageIndex]}
+                              alt="Selected"
+                              className="w-full h-full object-cover"
+                            />
+                          )}
+                        </div>
+                      ) : (
+                        // Show image with comments overlay
+                        <>
+                          <div className="flex-1 overflow-hidden flex items-center justify-center relative">
+                            {allImages[selectedImageIndex] && (
+                              <img
+                                src={allImages[selectedImageIndex]}
+                                alt="Selected"
+                                className="w-full h-full object-cover"
+                              />
+                            )}
+                            <div className="absolute bottom-0 rounded-t-xl left-0 right-0 bg-black bg-opacity-90 backdrop-blur-sm">
+                              <div className="flex items-center justify-between p-4 border-b border-gray-600">
+                                <div className="h-[1px] bg-white"></div>
+                                <h3 className="text-white font-semibold">
+                                  Comments
+                                </h3>
+                                <div className="text-white">
+                                  <Send size={16} />
+                                </div>
+                              </div>
+
+                              {/* Comments List */}
+                              <div className="h-70 overflow-y-auto">
+                                {comments.map((comment) => (
+                                  <div
+                                    key={comment.id}
+                                    className="flex items-start gap-3 p-3 border-gray-700"
+                                  >
+                                    <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
+                                      <span className="text-white text-xs font-bold">
+                                        {comment.username[0].toUpperCase()}
+                                      </span>
+                                    </div>
+                                    <div className="flex-1">
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-white font-medium text-sm">
+                                          {comment.username}
+                                        </span>
+                                        <span className="text-gray-400 text-xs">
+                                          {comment.time}
+                                        </span>
+                                      </div>
+                                      <p className="text-gray-300 text-sm mt-1">
+                                        {comment.text}
+                                      </p>
+                                      <button className="text-gray-400 text-xs mt-1 hover:text-white">
+                                        Reply
+                                      </button>
+                                    </div>
+                                    <button
+                                      onClick={() => toggleLike(comment.id)}
+                                      className={`p-1 ${
+                                        comment.liked
+                                          ? "text-red-500"
+                                          : "text-gray-400"
+                                      }`}
+                                    >
+                                      <Heart
+                                        size={16}
+                                        fill={
+                                          comment.liked ? "currentColor" : "none"
+                                        }
+                                      />
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+                              <div className="flex justify-between items-end p-2">
+                                {[
+                                  "❤️",
+                                  "🙌",
+                                  "🔥",
+                                  "👏",
+                                  "😢",
+                                  "😍",
+                                  "😮",
+                                  "😂",
+                                ].map((emoji, index) => (
+                                  <button
+                                    key={index}
+                                    className="text-xl hover:scale-110 transition-transform"
+                                  >
+                                    {emoji}
+                                  </button>
+                                ))}
+                              </div>
+                              {/* Add Comment */}
+                              <div className="flex items-center gap-2 p-3">
+                                <div className="w-8 h-8 bg-gray-600/30 rounded-full flex items-center justify-center">
+                                  <span className="text-white text-xs font-bold">
+                                    +
+                                  </span>
+                                </div>
+                                <input
+                                  type="text"
+                                  value={newComment}
+                                  onChange={(e) => setNewComment(e.target.value)}
+                                  placeholder="Add a comment for username..."
+                                  className="flex-1 bg-transparent text-white w-full text-sm border border-gray-600/40 p-2.5 rounded-2xl placeholder-gray-400 focus:outline-none"
+                                />
+                                <button
+                                  onClick={handleAddComment}
+                                  className="text-blue-400 p-1 hover:text-blue-300"
+                                ></button>
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      )}
+
+                      {!showComments && (
+                        <div className="h-[80px] bg-black p-2 w-full flex items-start justify-around text-white">
+                          <HomeOutlinedIcon fontSize="small" />
+                          <SearchIcon fontSize="small" />
+                          <SmartDisplayIcon fontSize="small" />
+                          <ShoppingBagOutlinedIcon fontSize="small" />
+                          <AccountCircleOutlinedIcon fontSize="small" />
+                        </div>
+                      )}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
